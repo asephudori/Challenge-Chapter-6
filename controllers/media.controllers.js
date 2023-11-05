@@ -47,30 +47,6 @@ module.exports = {
     }
   },
 
-  getAllPosts: async (req, res, next) => {
-    try {
-      const getPosts = await prisma.posts.findMany({
-        include: {
-          image: true,
-        },
-      });
-
-      if (getPosts.length === 0) {
-        return res.status(404).json({
-          success: false,
-          message: 'Posts not found',
-          data: null,
-        });
-      }
-
-      res
-        .status(200)
-        .json({ success: true, message: 'Post found', data: getPosts });
-    } catch (err) {
-      next(err);
-    }
-  },
-
   getPostById: async (req, res, next) => {
     try {
       const { id } = req.params;
@@ -99,10 +75,34 @@ module.exports = {
     }
   },
 
+  getAllPosts: async (req, res, next) => {
+    try {
+      const getPosts = await prisma.posts.findMany({
+        include: {
+          image: true,
+        },
+      });
+
+      if (getPosts.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: 'Posts not found',
+          data: null,
+        });
+      }
+
+      res
+        .status(200)
+        .json({ success: true, message: 'Post found', data: getPosts });
+    } catch (err) {
+      next(err);
+    }
+  },
+
   updatePostById: async (req, res, next) => {
     try {
       const { id } = req.params;
-        const { title, body } = req.body;
+      const { title, body } = req.body;
 
       if (!title || !body) {
         return res.status(400).json({
